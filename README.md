@@ -1,0 +1,240 @@
+# User Management Full-Stack Application
+
+A full-stack application built with Node.js/Express, N8N, PostgreSQL, and Vue.js that demonstrates secure data handling, workflow automation, and responsive UI design.
+
+## 🚀 Technologies Used
+
+### Backend
+- **Node.js** with Express.js framework
+- **N8N** for workflow automation
+- **PostgreSQL** as the primary database
+- **AES-256-GCM** for data encryption/decryption
+
+### Frontend
+- **Vue.js 3** with Composition API
+- **Tailwind CSS** for styling
+- **DaisyUI** component library
+- **Axios** for HTTP requests
+
+## 📋 Prerequisites
+
+Before running this application, ensure you have installed:
+- Node.js (v16 or higher)
+- PostgreSQL (v12 or higher)
+- N8N (can be run via npm or Docker)
+- npm or yarn package manager
+
+## 🛠️ Installation & Setup
+
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd user-management-app
+```
+
+### 2. Backend Setup
+```bash
+# Install dependencies
+cd backend
+npm install
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your actual values
+```
+
+### 3. Database Setup
+```sql
+-- Create the database and table
+CREATE DATABASE users_db;
+
+-- Connect to users_db and create table
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(128) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    phone VARCHAR(20) NOT NULL
+);
+```
+
+### 4. N8N Setup
+```bash
+# Install N8N globally
+npm install n8n -g
+
+# Or run with Docker
+docker run -it --rm \
+  --name n8n \
+  -p 5678:5678 \
+  -e DB_TYPE=postgresdb \
+  -e DB_POSTGRESDB_DATABASE=users_db \
+  -e DB_POSTGRESDB_HOST=localhost \
+  -e DB_POSTGRESDB_PORT=5432 \
+  -e DB_POSTGRESDB_USER=your_username \
+  -e DB_POSTGRESDB_PASSWORD=your_password \
+  n8nio/n8n
+```
+
+### 5. Frontend Setup
+```bash
+cd frontend
+npm install
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your API endpoints
+```
+
+## ⚙️ Environment Variables
+
+### Backend (.env)
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=users_db
+DB_USER=your_username
+DB_PASSWORD=your_password
+
+ENCRYPTED_DATA_URL=https://n8n-apps.nlabshealth.com/webhook/data-5dYbrVSlMVJxfmco
+DECRYPTION_KEY=your_decryption_key
+N8N_WEBHOOK_URL=http://localhost:5678/webhook/users
+
+PORT=3001
+```
+
+### Frontend (.env)
+```env
+VITE_API_URL=http://localhost:3001/api
+VITE_N8N_WEBHOOK_URL=http://localhost:5678/webhook
+```
+
+## 🔌 API Endpoints
+
+### Backend API (Express)
+- `GET /api/users` - Fetch all users from database
+- `POST /api/execute` - Execute the workflow (fetch, decrypt, store)
+- `POST /api/clear` - Clear all users from database
+
+### N8N Webhooks
+- `POST /webhook/users` - Receive and store decrypted user data
+- `POST /webhook/truncate` - Truncate users table
+
+## 📊 Database Schema
+
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(128) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    phone VARCHAR(20) NOT NULL
+);
+```
+
+## 🚀 Running the Application
+
+### 1. Start PostgreSQL
+Ensure your PostgreSQL database is running.
+
+### 2. Start N8N
+```bash
+n8n start
+# or with docker
+docker start n8n
+```
+
+### 3. Start the Backend
+```bash
+cd backend
+npm run dev
+```
+
+### 4. Start the Frontend
+```bash
+cd frontend
+npm run dev
+```
+
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:3001
+- N8N Interface: http://localhost:5678
+
+## 🌐 Cloud Deployment
+
+### Backend Deployment (Railway/Heroku)
+1. Connect your repository to Railway/Heroku
+2. Set environment variables in the dashboard
+3. Deploy the main branch
+
+### Frontend Deployment (Vercel/Netlify)
+1. Connect your repository to Vercel/Netlify
+2. Set environment variables
+3. Set build command: `npm run build`
+4. Set publish directory: `dist`
+
+### Database Deployment
+- Use Railway PostgreSQL, Heroku Postgres, or Amazon RDS
+- Update connection strings in environment variables
+
+### N8N Deployment
+- Use N8N cloud version or deploy to Railway/Heroku
+- Configure database connection
+
+## 🎯 Usage
+
+1. Open the application in your browser
+2. Click "Executar" to:
+   - Fetch encrypted data from the endpoint
+   - Decrypt using AES-256-GCM
+   - Send to N8N for processing
+   - Store in PostgreSQL
+   - Display in the frontend table
+
+3. Click "Limpar" to:
+   - Clear the frontend table
+   - Truncate the database table via N8N
+
+## 🔒 Security Features
+
+- AES-256-GCM encryption/decryption
+- Secure environment variable management
+- SQL injection prevention with parameterized queries
+- CORS configuration for frontend-backend communication
+
+## 📱 Responsive Design
+
+The application features a fully responsive design that works on:
+- Desktop computers
+- Tablets
+- Mobile devices
+
+Using Tailwind CSS and DaisyUI components ensures consistent styling across all screen sizes.
+
+## 🧪 Testing
+
+Run the test suite with:
+```bash
+# Backend tests
+cd backend
+npm test
+
+# Frontend tests
+cd frontend
+npm test
+```
+
+## 📄 License
+
+This project is created as part of a technical assessment.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## 📞 Support
+
+For questions about this application, please contact the development team.
