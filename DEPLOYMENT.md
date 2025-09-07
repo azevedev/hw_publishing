@@ -65,7 +65,6 @@ nano backend/.env
 
 Required environment variables:
 - `SUPABASE_URL`: Your Supabase project URL
-- `SUPABASE_ANON_KEY`: Your Supabase anonymous key
 - `ENCRYPTED_DATA_URL`: URL to fetch encrypted data
 - `N8N_WEBHOOK_URL`: Your N8N webhook URL
 
