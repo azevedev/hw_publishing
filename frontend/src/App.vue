@@ -21,33 +21,34 @@
             <!-- Status Indicator & Theme Toggle -->
             <div class="flex items-center space-x-3 mt-8 sm:mt-0">
               <!-- Status Indicator -->
-              <div class="flex items-center space-x-2 px-4 py-2 bg-base-200 rounded-lg border border-base-300">
+              <div class="flex items-center space-x-2 px-4 py-2 bg-base-200 rounded-lg border border-base-300 tooltip tooltip-bottom" data-tip="Esse status indica se o backend está online ou offline.">
                 <div :class="['w-2 h-2 rounded-full', online ? 'bg-success animate-pulse' : 'bg-error']"></div>
-                <span class="text-base-content/70 text-sm font-medium">{{ online ? 'Application Online' : 'Application Offline' }}</span>
+                <span class="text-base-content/70 text-sm font-medium">{{ online ? 'Aplicação Online' : 'Aplicação Offline' }}</span>
               </div>
 
               <!-- Theme Toggle -->
               <div class="dropdown dropdown-end">
-                <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle flex items-center px-4 w-fit">
                   <svg v-if="isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
                   </svg>
                   <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
                   </svg>
+                  Color Theme
                 </div>
                 <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 border border-base-300">
                   <li><a @click="setTheme('light')" :class="{ 'active': !isDark }">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
                     </svg>
-                    Light
+                    Claro
                   </a></li>
                   <li><a @click="setTheme('dark')" :class="{ 'active': isDark }">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
                     </svg>
-                    Dark
+                    Escuro
                   </a></li>
                 </ul>
               </div>

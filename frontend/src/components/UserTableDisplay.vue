@@ -3,8 +3,8 @@
     <!-- Table header -->
     <div class="bg-primary px-8 py-6">
       <div class="flex flex-row items-center justify-between flex-wrap">
-        <div class="flex flex-col sm:flex-row sm:items-center space-x-3">
-          <div class="w-10 h-10 bg-primary-content rounded-lg flex items-center justify-center shadow-lg">
+        <div class="group flex flex-col sm:flex-row sm:items-center space-x-3">
+          <div class="group-hover:scale-110 transition-all duration-200 w-10 h-10 bg-primary-content rounded-lg flex items-center justify-center shadow-lg">
             <!-- User SVG Icon -->
             <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -17,9 +17,9 @@
         </div>
         
         <!-- Stats -->
-        <div v-if="usersLength > 0" class="flex items-center space-x-4 ml-auto mt-auto">
+        <div v-if="usersLength > 0" class="group flex items-center space-x-4 ml-auto mt-auto">
           <div class="text-right">
-            <div class="text-2xl font-bold text-primary-content">{{ usersLength }}</div>
+            <div class="text-2xl font-bold text-primary-content group-hover:scale-110 transition-all duration-200">{{ usersLength }}</div>
             <div class="text-primary-content/70 text-xs">Total de usuários</div>
           </div>
         </div>
@@ -39,9 +39,10 @@
         </thead>
         <tbody>
           <tr 
-            v-for="(user) in users" 
+            v-for="(user, index) in users" 
             :key="user.id"
-            class="hover:bg-base-300/50 transition-colors duration-200"
+            class="hover:bg-base-100 animate-fade-in transition-colors duration-200"
+            :class="{'bg-neutral/20': index % 2 === 0}"
           >
             <td class="font-mono text-sm text-base-content/80">#{{ user.id }}</td>
             <td>
@@ -68,7 +69,7 @@
       </table>
       
       <!-- No users found -->
-      <div v-if="users.length === 0 && !loading" class="text-center py-16">
+      <div v-if="users.length === 0 && !loading" class="text-center py-16 animate-fade-in transition-all duration-200 hover:scale-105">
         <div class="w-24 h-24 mx-auto mb-6 bg-base-300 rounded-2xl flex items-center justify-center">
           <svg class="w-12 h-12 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
