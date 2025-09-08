@@ -51,10 +51,10 @@
                     <span class="text-sm font-semibold">{{  (user?.nome?.split(' ')[0]?.charAt(0)?.toUpperCase() ?? '-')  + (user?.nome?.split(' ')[1]?.charAt(0)?.toUpperCase() ?? '') }}</span>
                   </div>
                 </div>
-                <div class="font-medium text-base-content">{{ user.nome }}</div>
+                <div class="font-medium text-base-content whitespace-nowrap">{{ user.nome }}</div>
               </div>
             </td>
-            <td class="text-base-content/80">{{ user.email }}</td>
+            <td class="text-base-content/80 whitespace-nowrap">{{ user.email }}</td>
             <td>
               <div class="flex items-center space-x-2">
                 <svg class="w-4 h-4 text-base-content/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
