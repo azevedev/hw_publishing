@@ -39,7 +39,6 @@ app.post('/api/execute', async (req, res) => {
     const encryptedData = response.data?.data?.encrypted ?? {};
 
     const secretKey = process.env.DECRYPTION_KEY;
-    console.log('secretKey: ', secretKey);
     
     // Decrypt the data
     const decryptedData = decryptData(
@@ -48,8 +47,6 @@ app.post('/api/execute', async (req, res) => {
       encryptedData.iv,
       encryptedData.authTag
     );
-
-    console.log('decryptedData: ', decryptedData);
 
     // Send data to N8N webhook
     await axios.post(process.env.N8N_WEBHOOK_URL, {users: decryptedData} );

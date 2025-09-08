@@ -55,6 +55,28 @@
           </div>
         </div>
       </div>
+
+      <!-- Toast Notifications -->
+      <div v-if="toastVisible" class="toast toast-top z-50 overflow-hidden" @mouseenter="pauseToast" @mouseleave="resumeToast">
+        <div class="z-50 px-4 pt-6 pb-3" :class="['alert', toastType === 'success' ? 'alert-success' : 'alert-error']">
+            <!-- close button -->
+            <button class="btn btn-sm btn-circle btn-ghost absolute top-1 right-1 w-6 h-6" @click="closeToast">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            </button>
+            <span class="mb-2">{{ toastMessage }}</span>
+            <div class="w-full absolute bottom-0 left-0">
+                <div class="h-2 w-full bg-base-300 ">
+                <div
+                    class="h-2"
+                    :class="toastType === 'success' ? 'bg-success-content' : 'bg-error-content'"
+                    :style="{ width: toastProgress + '%', transition: 'width 50ms linear' }"
+                ></div>
+                </div>
+            </div>
+        </div>
+      </div>
     </div>
   </template>
   
@@ -77,7 +99,16 @@
         loading: false,
         error: null,
         currentPage: 1,
-        itemsPerPage: 10
+        itemsPerPage: 10,
+        toastVisible: false,
+        toastMessage: '',
+        toastType: 'success',
+        toastTimeoutId: null,
+        toastIntervalId: null,
+        toastDurationMs: 3000,
+        toastRemainingMs: 0,
+        toastStartTs: 0,
+        toastProgress: 100
       }
     },
     computed: {
@@ -91,18 +122,95 @@
       }
     },
     methods: {
+      showToast(message, type = 'success') {
+        this.toastMessage = message
+        this.toastType = type
+        this.toastVisible = true
+
+        // reset timers/progress
+        clearTimeout(this.toastTimeoutId)
+        this.toastTimeoutId = null
+        clearInterval(this.toastIntervalId)
+        this.toastIntervalId = null
+
+        this.toastRemainingMs = this.toastDurationMs
+        this.toastProgress = 100
+        this.toastStartTs = Date.now()
+
+        // schedule auto-close and progress updates
+        this.toastTimeoutId = setTimeout(() => {
+          this.toastVisible = false
+          this.clearToastTimers()
+        }, this.toastRemainingMs)
+
+        this.toastIntervalId = setInterval(() => {
+          const elapsed = Date.now() - this.toastStartTs
+          const left = Math.max(this.toastRemainingMs - elapsed, 0)
+          this.toastProgress = (left / this.toastDurationMs) * 100
+          if (left <= 0) {
+            this.toastProgress = 0
+            this.clearToastTimers()
+          }
+        }, 50)
+      },
+
+      pauseToast() {
+        if (!this.toastVisible) return
+        const elapsed = Date.now() - this.toastStartTs
+        this.toastRemainingMs = Math.max(this.toastRemainingMs - elapsed, 0)
+        clearTimeout(this.toastTimeoutId)
+        this.toastTimeoutId = null
+        clearInterval(this.toastIntervalId)
+        this.toastIntervalId = null
+      },
+
+      resumeToast() {
+        if (!this.toastVisible || this.toastRemainingMs <= 0) return
+        this.toastStartTs = Date.now()
+        clearTimeout(this.toastTimeoutId)
+        clearInterval(this.toastIntervalId)
+
+        this.toastTimeoutId = setTimeout(() => {
+          this.toastVisible = false
+          this.clearToastTimers()
+        }, this.toastRemainingMs)
+
+        this.toastIntervalId = setInterval(() => {
+          const elapsed = Date.now() - this.toastStartTs
+          const left = Math.max(this.toastRemainingMs - elapsed, 0)
+          this.toastProgress = (left / this.toastDurationMs) * 100
+          if (left <= 0) {
+            this.toastProgress = 0
+            this.clearToastTimers()
+          }
+        }, 50)
+      },
+
+      clearToastTimers() {
+        clearTimeout(this.toastTimeoutId)
+        this.toastTimeoutId = null
+        clearInterval(this.toastIntervalId)
+        this.toastIntervalId = null
+      },
+
+      closeToast() {
+        this.toastVisible = false
+        this.toastTimeoutId = null
+      },
+
       async executeProcess() {
         this.loading = true;
         this.error = null;
         
         try {
           const response = await api.post('/execute');
-          console.log('response: ', response);
           // Refresh the user data
           this.users = response.data.decryptedData ?? [];
+          this.showToast('Processo executado com sucesso', 'success')
         } catch (err) {
           this.error = err.response?.data?.error || err.message;
           console.error('Error executing process:', err);
+          this.showToast('Algo deu errado ao executar o processo', 'error')
         } finally {
           this.loading = false;
         }
@@ -116,9 +224,11 @@
           await api.post('/clear');
           this.users = [];
           this.currentPage = 1;
+          this.showToast('Dados limpos com sucesso', 'success')
         } catch (err) {
           this.error = err.response?.data?.error || err.message;
           console.error('Error clearing data:', err);
+          this.showToast('Algo deu errado ao limpar os dados', 'error')
         } finally {
           this.loading = false;
         }
@@ -132,9 +242,11 @@
           const response = await api.get('/users');
           this.users = response.data;
           this.currentPage = 1;
+          this.showToast('Usuários carregados com sucesso', 'success')
         } catch (err) {
           this.error = err.response?.data?.error || err.message;
           console.error('Error fetching users:', err);
+          this.showToast('Algo deu errado ao carregar usuários', 'error')
         } finally {
           this.loading = false;
         }

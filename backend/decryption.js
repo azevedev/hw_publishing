@@ -11,13 +11,6 @@ function decryptData(combinedData, keyParam, ivParam, authTagParam) {
       const encryptedBuffer = Buffer.from(combinedData, 'hex');
       const authTag = Buffer.from(authTagParam, 'hex');
       
-      console.log('Using values:', algorithm, combinedData, keyParam, ivParam);
-      console.log('IV length:', iv.length);
-      console.log('Auth tag length:', authTag.length);
-      console.log('Ciphertext length:', encryptedBuffer.length);
-      console.log('Key length:', key.length);
-
-
       // Create decipher and set auth tag
       const decipher = crypto.createDecipheriv(algorithm, key, iv);
       decipher.setAuthTag(authTag);
