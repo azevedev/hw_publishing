@@ -99,7 +99,7 @@
           const response = await api.post('/execute');
           console.log('response: ', response);
           // Refresh the user data
-          this.users = response.data.users ?? [];
+          this.users = response.data.decryptedData ?? [];
         } catch (err) {
           this.error = err.response?.data?.error || err.message;
           console.error('Error executing process:', err);
