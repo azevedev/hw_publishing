@@ -111,7 +111,7 @@ export default {
         ['bg-warning-content', 'text-warning'],
         ['bg-error', 'text-error-content'],
         ['bg-error-content', 'text-error'],
-        ['bg-base-content', 'text-base-content-content']
+        ['bg-base-content', 'text-black']
       ]
       const key = String(name || '').toLowerCase().trim()
       let hash = 0
