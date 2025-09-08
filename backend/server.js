@@ -26,7 +26,7 @@ app.use(express.json());
 const users = require('./users.json');
 
 const axios = require('axios');
-// const { decryptData } = require('./decryption');
+const { decryptData } = require('./decryption');
 const { supabase } = require('./db.js');
 
 // Simple health check endpoint
@@ -38,20 +38,24 @@ app.get('/api/up', (req, res) => {
 app.post('/api/execute', async (req, res) => {
   try {
     // Fetch encrypted data from endpoint
-    // const response = await axios.get(process.env.ENCRYPTED_DATA_URL);
-    // const encryptedData = response.data?.data?.encrypted ?? {};
+    const response = await axios.get(process.env.ENCRYPTED_DATA_URL);
+    const encryptedData = response.data?.data?.encrypted ?? {};
+
+    const secretKey = process.env.DECRYPTION_KEY;
+    console.log('secretKey: ', secretKey);
     
-    // Skip decryption for now
     // Decrypt the data
-    // const decryptedData = decryptData(
-    //   encryptedData.encrypted,
-    //   encryptedData.encription_key,
-    //   encryptedData.iv,
-    //   encryptedData.authTag
-    // );
-    
+    const decryptedData = decryptData(
+      encryptedData.encrypted,
+      secretKey,
+      encryptedData.iv,
+      encryptedData.authTag
+    );
+
+    console.log('decryptedData: ', decryptedData);
+
     // Send data to N8N webhook
-    await axios.post(process.env.N8N_WEBHOOK_URL, {users: users} );
+    await axios.post(process.env.N8N_WEBHOOK_URL, {users: decryptedData} );
     
     res.json({ success: true, message: 'Data processed successfully', users });
   } catch (error) {
