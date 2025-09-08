@@ -6,7 +6,10 @@ dotenv.config();
 const app = express();
 const port = 3001;
 
-app.use(cors());
+app.use(cors({
+    origin: ['https://hw.azevedev.com', 'https://www.hw.azevedev.com'],
+    credentials: true
+  }));
 app.use(express.json());
 
 // Sample user data
