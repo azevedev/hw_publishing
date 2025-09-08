@@ -1,27 +1,27 @@
 # User Management Full-Stack Application
 
-A full-stack application built with Node.js/Express, N8N, PostgreSQL, and Vue.js that demonstrates secure data handling, workflow automation, and responsive UI design.
+A full-stack application built with Node.js/Express, Supabase, and Vue.js that demonstrates secure data handling, encryption/decryption, and responsive UI design.
 
 ## 🚀 Technologies Used
 
 ### Backend
 - **Node.js** with Express.js framework
-- **N8N** for workflow automation
-- **PostgreSQL** as the primary database
+- **Supabase** as the database and backend service
 - **AES-256-GCM** for data encryption/decryption
+- **CORS** configured for production domains
 
 ### Frontend
 - **Vue.js 3** with Composition API
 - **Tailwind CSS** for styling
-- **DaisyUI** component library
+- **DaisyUI** component library (loaded via CDN)
 - **Axios** for HTTP requests
+- **Responsive design** with dark/light theme support
 
 ## 📋 Prerequisites
 
 Before running this application, ensure you have installed:
-- Node.js (v16 or higher)
-- PostgreSQL (v12 or higher)
-- N8N (can be run via npm or Docker)
+- Node.js (v20 or higher)
+- Supabase account and project
 - npm or yarn package manager
 
 ## 🛠️ Installation & Setup
@@ -43,12 +43,10 @@ cp .env.example .env
 # Edit .env with your actual values
 ```
 
-### 3. Database Setup
+### 3. Supabase Setup
+1. **Create a Supabase project** at [supabase.com](https://supabase.com)
+2. **Create the users table** in the SQL editor:
 ```sql
--- Create the database and table
-CREATE DATABASE users_db;
-
--- Connect to users_db and create table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(128) NOT NULL,
@@ -56,24 +54,10 @@ CREATE TABLE users (
     phone VARCHAR(20) NOT NULL
 );
 ```
+3. **Get your project URL and API key** from Project Settings > API
 
-### 4. N8N Setup
-```bash
-# Install N8N globally
-npm install n8n -g
-
-# Or run with Docker
-docker run -it --rm \
-  --name n8n \
-  -p 5678:5678 \
-  -e DB_TYPE=postgresdb \
-  -e DB_POSTGRESDB_DATABASE=users_db \
-  -e DB_POSTGRESDB_HOST=localhost \
-  -e DB_POSTGRESDB_PORT=5432 \
-  -e DB_POSTGRESDB_USER=your_username \
-  -e DB_POSTGRESDB_PASSWORD=your_password \
-  n8nio/n8n
-```
+### 4. Environment Configuration
+Create environment files for both frontend and backend with the required variables (see Environment Variables section below).
 
 ### 5. Frontend Setup
 ```bash
@@ -89,35 +73,28 @@ cp .env.example .env
 
 ### Backend (.env)
 ```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=users_db
-DB_USER=your_username
-DB_PASSWORD=your_password
-
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your_supabase_anon_key
 ENCRYPTED_DATA_URL=https://n8n-apps.nlabshealth.com/webhook/data-5dYbrVSlMVJxfmco
 DECRYPTION_KEY=your_decryption_key
-N8N_WEBHOOK_URL=http://localhost:5678/webhook/users
-
+N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook/users
 PORT=3001
 ```
 
 ### Frontend (.env)
 ```env
-VITE_API_URL=http://localhost:3001/api
-VITE_N8N_WEBHOOK_URL=http://localhost:5678/webhook
+# No environment variables needed for frontend
+# API URL is automatically determined based on environment
+# Development: http://localhost:3001/api
+# Production: https://hw-api.azevedev.com/api
 ```
 
 ## 🔌 API Endpoints
 
 ### Backend API (Express)
-- `GET /api/users` - Fetch all users from database
-- `POST /api/execute` - Execute the workflow (fetch, decrypt, store)
-- `POST /api/clear` - Clear all users from database
-
-### N8N Webhooks
-- `POST /webhook/users` - Receive and store decrypted user data
-- `POST /webhook/truncate` - Truncate users table
+- `GET /api/users` - Fetch all users from Supabase database
+- `POST /api/execute` - Execute the workflow (fetch encrypted data, decrypt, send to N8N)
+- `POST /api/clear` - Clear all users from database via N8N webhook
 
 ## 📊 Database Schema
 
@@ -130,25 +107,20 @@ CREATE TABLE users (
 );
 ```
 
+*Note: This table is created in Supabase, not a local PostgreSQL instance.*
+
 ## 🚀 Running the Application
 
-### 1. Start PostgreSQL
-Ensure your PostgreSQL database is running.
+### 1. Ensure Supabase is configured
+Make sure your Supabase project is set up and environment variables are configured.
 
-### 2. Start N8N
-```bash
-n8n start
-# or with docker
-docker start n8n
-```
-
-### 3. Start the Backend
+### 2. Start the Backend
 ```bash
 cd backend
 npm run dev
 ```
 
-### 4. Start the Frontend
+### 3. Start the Frontend
 ```bash
 cd frontend
 npm run dev
@@ -157,7 +129,8 @@ npm run dev
 The application will be available at:
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:3001
-- N8N Interface: http://localhost:5678
+- Production Frontend: https://hw.azevedev.com
+- Production API: https://hw-api.azevedev.com
 
 ## 🌐 Production Deployment
 
@@ -349,30 +322,22 @@ The reverse proxy is configured in the Caddyfile to:
 
 ### 7. Database Setup (Production)
 
-1. **Install PostgreSQL**
-   ```bash
-   sudo apt update
-   sudo apt install postgresql postgresql-contrib
-   ```
-
-2. **Configure database**
-   ```bash
-   sudo -u postgres psql
-   ```
+1. **Supabase Configuration**
+   - Create a Supabase project at [supabase.com](https://supabase.com)
+   - Create the users table in the SQL editor:
    ```sql
-   CREATE DATABASE users_db;
-   CREATE USER your_user WITH PASSWORD 'your_password';
-   GRANT ALL PRIVILEGES ON DATABASE users_db TO your_user;
-   \q
+   CREATE TABLE users (
+       id SERIAL PRIMARY KEY,
+       nome VARCHAR(128) NOT NULL,
+       email VARCHAR(255) UNIQUE NOT NULL,
+       phone VARCHAR(20) NOT NULL
+   );
    ```
 
-3. **Update backend environment variables**
+2. **Update backend environment variables**
    ```env
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_NAME=users_db
-   DB_USER=your_user
-   DB_PASSWORD=your_password
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_KEY=your_supabase_anon_key
    NODE_ENV=production
    PORT=3001
    ```
@@ -426,22 +391,21 @@ sudo systemctl restart caddy
 
 **Backend (.env)**
 ```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=users_db
-DB_USER=your_production_user
-DB_PASSWORD=your_secure_password
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your_supabase_anon_key
 ENCRYPTED_DATA_URL=https://n8n-apps.nlabshealth.com/webhook/data-5dYbrVSlMVJxfmco
 DECRYPTION_KEY=your_decryption_key
-N8N_WEBHOOK_URL=http://localhost:5678/webhook/users
+N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook/users
 PORT=3001
 NODE_ENV=production
 ```
 
 **Frontend (build-time)**
 ```env
-VITE_API_URL=https://hw.azevedev.com/api
-VITE_N8N_WEBHOOK_URL=https://your-n8n-domain.com/webhook
+# No environment variables needed for frontend
+# API URL is automatically determined based on environment
+# Development: http://localhost:3001/api
+# Production: https://hw-api.azevedev.com/api
 ```
 
 ### 11. Security Considerations
@@ -457,22 +421,23 @@ VITE_N8N_WEBHOOK_URL=https://your-n8n-domain.com/webhook
 
 1. Open the application in your browser
 2. Click "Executar" to:
-   - Fetch encrypted data from the endpoint
-   - Decrypt using AES-256-GCM
-   - Send to N8N for processing
-   - Store in PostgreSQL
-   - Display in the frontend table
+   - Fetch encrypted data from the external endpoint
+   - Decrypt using AES-256-GCM encryption
+   - Send decrypted data to N8N webhook for processing
+   - Store processed data in Supabase
+   - Display results in the frontend table
 
 3. Click "Limpar" to:
    - Clear the frontend table
-   - Truncate the database table via N8N
+   - Truncate the database table via N8N webhook
 
 ## 🔒 Security Features
 
 - AES-256-GCM encryption/decryption
 - Secure environment variable management
-- SQL injection prevention with parameterized queries
-- CORS configuration for frontend-backend communication
+- Supabase Row Level Security (RLS)
+- CORS configuration for production domains
+- IP-based API access restrictions in production
 
 ## 📱 Responsive Design
 
@@ -481,7 +446,7 @@ The application features a fully responsive design that works on:
 - Tablets
 - Mobile devices
 
-Using Tailwind CSS and DaisyUI components ensures consistent styling across all screen sizes.
+Using Tailwind CSS and DaisyUI components (loaded via CDN) ensures consistent styling across all screen sizes, with built-in dark/light theme support.
 
 ## 🧪 Testing
 
