@@ -312,7 +312,7 @@ First, configure your domain with Cloudflare:
    sudo systemctl status caddy
    ```
 
-### 6. Reverse Proxy Configuration
+## 🖥️ Reverse Proxy Configuration
 
 The reverse proxy is configured in the Caddyfile to:
 
@@ -320,8 +320,9 @@ The reverse proxy is configured in the Caddyfile to:
 2. **Handle API routes** (`/api/*`) by proxying to the Node.js backend on `localhost:3001`
 3. **Implement IP restrictions** for API access (only allowing VPS IP and localhost)
 4. **Add proper headers** for backend communication
+   
 
-### 9. Monitoring & Maintenance
+## 🔨 Monitoring & Maintenance
 
 ```bash
 # Check PM2 processes
@@ -339,7 +340,7 @@ sudo caddy list-certificates
 pm2 restart backend
 sudo systemctl restart caddy
 ```
-### 11. Security Considerations
+## 🔏 Security Considerations
 
 - SSL certificates are automatically managed by Caddy
 - CloudFlare for domain protection
