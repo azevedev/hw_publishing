@@ -17,9 +17,9 @@
         </div>
         
         <!-- Stats -->
-        <div v-if="usersLength > 0" class="group flex items-center space-x-4 ml-auto mt-auto">
+        <div v-if="usersLength > 0" class="hover:scale-105 transition-all duration-200 flex items-center space-x-4 ml-auto mt-auto">
           <div class="text-right">
-            <div class="text-2xl font-bold text-primary-content group-hover:scale-110 transition-all duration-200">{{ usersLength }}</div>
+            <div class="text-2xl font-bold text-primary-content">{{ usersLength }}</div>
             <div class="text-primary-content/70 text-xs">Total de usuários</div>
           </div>
         </div>
@@ -42,7 +42,7 @@
             v-for="(user, index) in users" 
             :key="user.id"
             class="hover:bg-base-100 animate-fade-in transition-colors duration-200"
-            :class="{'bg-neutral/20': index % 2 === 0}"
+            :class="{'bg-neutral/10': index % 2 === 0}"
           >
             <td class="font-mono text-sm text-base-content/80">#{{ user.id }}</td>
             <td>
