@@ -28,8 +28,8 @@ Before running this application, ensure you have installed:
 
 ### 1. Clone the Repository
 ```bash
-git clone <repository-url>
-cd user-management-app
+git clone https://github.com/azevedev/hw_publishing.git
+cd hw_publishing
 ```
 
 ### 2. Backend Setup
@@ -47,9 +47,6 @@ cp .env.example .env
 ```bash
 cd frontend
 npm install
-npm run build
-OR
-npm run dev
 ```
 
 ## ⚙️ Environment Variables
@@ -57,9 +54,9 @@ npm run dev
 ### Backend (.env)
 ```env
 SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_KEY=your_supabase_anon_key
+SUPABASE_KEY=your_supabase_key
 ENCRYPTED_DATA_URL=https://n8n-apps.nlabshealth.com/webhook/data-5dYbrVSlMVJxfmco
-DECRYPTION_KEY=your_decryption_key
+DECRYPTION_KEY=your_secret_decryption_key
 N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook/users
 PORT=3001
 NODE_ENV=development
@@ -68,7 +65,7 @@ NODE_ENV=development
 ## 🔌 API Endpoints
 
 ### Backend API (Express)
-- `GET /api/users` - Fetch all users from Supabase database
+- `GET /api/users` - Fetch all users from Supabase database - table Users
 - `POST /api/execute` - Execute the workflow (fetch encrypted data, decrypt, send to N8N)
 - `POST /api/clear` - Clear all users from database via N8N webhook
 - `GET /api/up` - HealthCheck for backend
@@ -141,8 +138,8 @@ First, configure your domain with Cloudflare:
    Content: <VPS IP>
    Proxy status: Proxied (orange cloud)
    
-   Type: A  
-   Name: www.hw.yourdomain.com
+   Type: A
+   Name: hw-api.yourdomain.com
    Content: <VPS IP>
    Proxy status: Proxied (orange cloud)
    ```
@@ -252,6 +249,7 @@ First, configure your domain with Cloudflare:
    ```
 
 ### 5. Caddy Web Server & SSL Configuration
+This is one of the most important parts of the deployment. Here we create a reverse proxy and correct domain with SSL config for both frontend and backend.
 
 1. **Install Caddy**
    ```bash
@@ -269,10 +267,10 @@ First, configure your domain with Cloudflare:
    The `Caddyfile` is already configured with:
    ```
    # API subdomain - handles backend requests
-    hw-api.azevedev.com {
+    hw-api.yourdomain.com {
         # Allow requests from your frontend domain
         @allowed_origins {
-            header Origin https://hw.azevedev.com
+            header Origin https://hw.yourdomain.com
         }
     
        handle @allowed_origins {
@@ -290,7 +288,7 @@ First, configure your domain with Cloudflare:
         }
     }
     # Frontend domain - serves your Vue app
-    hw.azevedev.com, www.hw.azevedev.com {
+    hw.azevedev.com, www.hw.yourdomain.com {
         root * /var/www/hw_publishing/frontend/dist
         file_server
         try_files {path} /index.html
@@ -388,4 +386,4 @@ This project is created as part of a technical assessment.
 
 
 
-For questions about this application, please contact the development team.
+For questions about this application, please contact me at azevedev@gmail.com
