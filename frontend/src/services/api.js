@@ -8,7 +8,7 @@ const getBaseURL = () => {
   }
   
   // In production, use the API subdomain
-  return 'https://api.hw.azevedev.com/api';
+  return 'https://hw-api.azevedev.com/api';
 };
 
 const api = axios.create({
