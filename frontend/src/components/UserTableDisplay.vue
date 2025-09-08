@@ -28,13 +28,13 @@
 
     <!-- Table content -->
     <div class="overflow-x-auto">
-      <table class="table w-full">
+      <table class="table table-zebra w-full">
         <thead>
           <tr>
             <th class="text-base-content/70">ID</th>
-            <th class="text-base-content/70">Nome</th>
-            <th class="text-base-content/70">Email</th>
-            <th class="text-base-content/70">Telefone</th>
+            <th class="text-base-content/70">Name</th>
+            <th class="text-base-content/70">E-mail</th>
+            <th class="text-base-content/70">Phone</th>
           </tr>
         </thead>
         <tbody>
@@ -47,7 +47,7 @@
             <td>
               <div class="flex items-center space-x-3">
                 <div class="avatar placeholder">
-                  <div class="bg-secondary text-primary-content rounded-full w-10 !flex items-center justify-center">
+                  <div :class="['rounded-full w-10 !flex items-center justify-center', ...getAvatarClasses(user?.nome)]">
                     <span class="text-sm font-semibold">{{  (user?.nome?.split(' ')[0]?.charAt(0)?.toUpperCase() ?? '-')  + (user?.nome?.split(' ')[1]?.charAt(0)?.toUpperCase() ?? '') }}</span>
                   </div>
                 </div>
@@ -60,7 +60,7 @@
                 <svg class="w-4 h-4 text-base-content/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                 </svg>
-                <span class="text-base-content/80">{{ user.phone }}</span>
+                <span class="text-base-content/80">{{ formatPhone(user.phone) }}</span>
               </div>
             </td>
           </tr>
@@ -92,6 +92,36 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    getAvatarClasses(name) {
+      const palette = [
+        ['bg-primary', 'text-primary-content'],
+        ['bg-secondary', 'text-secondary-content'],
+        ['bg-accent', 'text-accent-content'],
+        ['bg-info', 'text-info-content'],
+        ['bg-success', 'text-success-content'],
+        ['bg-warning', 'text-warning-content'],
+        ['bg-error', 'text-error-content']
+      ]
+      const key = String(name || '').toLowerCase().trim()
+      let hash = 0
+      for (let i = 0; i < key.length; i++) {
+        hash = (hash * 31 + key.charCodeAt(i)) >>> 0
+      }
+      const idx = key.length ? hash % palette.length : 0
+      return palette[idx]
+    },
+    // Format only 10-digit numbers: (AAA) XXX-XXXX; otherwise return raw
+    formatPhone(raw) {
+      if (!raw) return ''
+      const digits = String(raw).replace(/\D/g, '')
+      if (digits.length !== 10) return raw
+      const area = digits.slice(0, 3)
+      const part1 = digits.slice(3, 6)
+      const part2 = digits.slice(6)
+      return `(${area}) ${part1}-${part2}`
     }
   }
 }
