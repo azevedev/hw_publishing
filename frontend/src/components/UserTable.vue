@@ -31,7 +31,7 @@
       </div>
   
       <!-- Pagination -->
-      <div v-if="users.length > 0" class="mt-18">
+      <div v-if="users.length > 0" class="mt-14">
         <Pagination
           :current-page="currentPage"
           :total-pages="totalPages"
