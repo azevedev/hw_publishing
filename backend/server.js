@@ -22,9 +22,6 @@ if (process.env.NODE_ENV === 'development') {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// User data
-const users = require('./users.json');
-
 const axios = require('axios');
 const { decryptData } = require('./decryption');
 const { supabase } = require('./db.js');
@@ -57,7 +54,7 @@ app.post('/api/execute', async (req, res) => {
     // Send data to N8N webhook
     await axios.post(process.env.N8N_WEBHOOK_URL, {users: decryptedData} );
     
-    res.json({ success: true, message: 'Data processed successfully', users });
+    res.json({ success: true, message: 'Data processed successfully', decryptedData });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

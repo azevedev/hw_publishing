@@ -97,6 +97,7 @@
         
         try {
           const response = await api.post('/execute');
+          console.log('response: ', response);
           // Refresh the user data
           this.users = response.data.users ?? [];
         } catch (err) {
