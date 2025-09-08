@@ -75,7 +75,7 @@
           </svg>
         </div>
         <h3 class="text-base-content text-lg font-semibold mb-2">Nenhum usuário encontrado</h3>
-        <p class="text-base-content/60 text-sm">Clique em "Executar" para carregar dados do sistema.</p>
+        <p class="text-base-content/60 text-sm">Clique em "Executar" para carregar os dados do sistema.</p>
       </div>
     </div>
   </div>

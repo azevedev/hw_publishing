@@ -22,8 +22,8 @@
             <div class="flex items-center space-x-3 mt-8 sm:mt-0">
               <!-- Status Indicator -->
               <div class="flex items-center space-x-2 px-4 py-2 bg-base-200 rounded-lg border border-base-300">
-                <div class="w-2 h-2 bg-success rounded-full animate-pulse"></div>
-                <span class="text-base-content/70 text-sm font-medium">Application Online</span>
+                <div :class="['w-2 h-2 rounded-full', online ? 'bg-success animate-pulse' : 'bg-error']"></div>
+                <span class="text-base-content/70 text-sm font-medium">{{ online ? 'Application Online' : 'Application Offline' }}</span>
               </div>
 
               <!-- Theme Toggle -->
@@ -74,7 +74,9 @@ export default {
   },
   data() {
     return {
-      currentTheme: 'dark'
+      currentTheme: 'dark',
+      online: true,
+      onlineIntervalId: null
     }
   },
   computed: {
@@ -95,11 +97,36 @@ export default {
       // Get saved theme or default to dark
       const savedTheme = localStorage.getItem('theme') || 'dark'
       this.setTheme(savedTheme)
+    },
+
+    async checkOnline() {
+      try {
+        // In development, backend is at localhost:3001; in production, reuse api base
+        const url = import.meta.env.DEV ? 'http://localhost:3001/up' : 'https://hw-api.azevedev.com/up'
+        const response = await fetch(url, { method: 'GET' })
+        this.online = response.ok
+      } catch (e) {
+        console.error('Error checking online:', e)
+        this.online = false
+      }
+    },
+
+    startOnlinePolling() {
+      this.checkOnline()
+      this.onlineIntervalId = setInterval(this.checkOnline, 5000)
     }
   },
   
   mounted() {
     this.initTheme()
+    this.startOnlinePolling()
+  },
+
+  beforeUnmount() {
+    if (this.onlineIntervalId) {
+      clearInterval(this.onlineIntervalId)
+      this.onlineIntervalId = null
+    }
   }
 }
 </script>

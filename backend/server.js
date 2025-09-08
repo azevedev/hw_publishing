@@ -15,7 +15,7 @@ const corsOptions = {
 };
 
 if (process.env.NODE_ENV === 'development') {
-    console.log('Development mode');
+    console.info('Development mode');
     corsOptions.origin = ['http://localhost:3000', 'http://localhost:3001'];
 }
 
@@ -26,16 +26,20 @@ app.use(express.json());
 const users = require('./users.json');
 
 const axios = require('axios');
-const { decryptData } = require('./decryption');
+// const { decryptData } = require('./decryption');
 const { supabase } = require('./db.js');
+
+// Simple health check endpoint
+app.get('/up', (req, res) => {
+    res.sendStatus(200);
+});
 
 // Endpoint to fetch, decrypt and process data
 app.post('/api/execute', async (req, res) => {
   try {
     // Fetch encrypted data from endpoint
-    const response = await axios.get(process.env.ENCRYPTED_DATA_URL);
-    console.log("Response from encrypted data:", response.data?.data?.encrypted ?? {});
-    const encryptedData = response.data?.data?.encrypted ?? {};
+    // const response = await axios.get(process.env.ENCRYPTED_DATA_URL);
+    // const encryptedData = response.data?.data?.encrypted ?? {};
     
     // Skip decryption for now
     // Decrypt the data
@@ -47,8 +51,6 @@ app.post('/api/execute', async (req, res) => {
     // );
     
     // Send data to N8N webhook
-    console.log("URL:", process.env.N8N_WEBHOOK_URL);
-    console.log("Users:", users);
     await axios.post(process.env.N8N_WEBHOOK_URL, {users: users} );
     
     res.json({ success: true, message: 'Data processed successfully', users });
@@ -71,9 +73,7 @@ app.post('/api/clear', async (req, res) => {
 // Endpoint to get users from database
 app.get('/api/users', async (req, res) => {
   try {
-    console.log("Supabase client:", supabase);
     const { data } = await supabase.from('users').select('*');
-    console.log("Users from Supabase:", data);
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -81,5 +81,5 @@ app.get('/api/users', async (req, res) => {
 });
 
 app.listen(port, '127.0.0.1', () => {
-    console.log('Backend running on port 3001 (localhost only)');
+    console.info('Backend running on port 3001 (localhost only)');
 });
