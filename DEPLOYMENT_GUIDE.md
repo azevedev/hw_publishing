@@ -79,9 +79,71 @@ sudo chown -R $USER:$USER /var/www/your-app-name
 ### 3.2 Upload Your Application
 
 #### Option A: Using Git (Recommended)
+
+**Method 1: Clone with HTTPS (Simplest - No SSH key needed):**
 ```bash
 cd /var/www/your-app-name
-git clone https://github.com/your-username/your-repo.git .
+git clone https://github.com/azevedev/hw_publishing.git .
+```
+
+**Method 2: Copy SSH keys from local machine (Recommended):**
+
+1. **Copy your GitHub SSH key from local machine to VPS:**
+```bash
+# From your local machine, copy only the GitHub SSH key to VPS
+scp ~/.ssh/id_rsa* username@your-vps-ip:~/.ssh/
+scp ~/.ssh/known_hosts username@your-vps-ip:~/.ssh/
+```
+
+2. **Set correct permissions on VPS:**
+```bash
+# SSH into your VPS first
+ssh username@your-vps-ip
+
+# Set correct permissions for SSH files
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_*
+chmod 644 ~/.ssh/*.pub
+chmod 644 ~/.ssh/known_hosts
+```
+
+3. **Test SSH connection to GitHub:**
+```bash
+ssh -T git@github.com
+# Should return: "Hi azevedev! You've successfully authenticated..."
+```
+
+4. **Clone the repository:**
+```bash
+cd /var/www/your-app-name
+git clone git@github.com:azevedev/hw_publishing.git .
+```
+
+**Method 3: Generate new SSH key on VPS:**
+
+1. **Generate SSH key on VPS** (if you don't want to copy existing ones):
+```bash
+ssh-keygen -t ed25519 -C "your-email@example.com"
+# Press Enter to accept default file location
+# Optionally set a passphrase
+```
+
+2. **Add the public key to your GitHub account:**
+```bash
+cat ~/.ssh/id_ed25519.pub
+# Copy the output and add it to your GitHub account under Settings > SSH and GPG keys
+```
+
+3. **Test SSH connection:**
+```bash
+ssh -T git@github.com
+# Should return: "Hi azevedev! You've successfully authenticated..."
+```
+
+4. **Clone the repository:**
+```bash
+cd /var/www/your-app-name
+git clone git@github.com:azevedev/hw_publishing.git .
 ```
 
 #### Option B: Using SCP/SFTP
@@ -92,7 +154,7 @@ scp -r /home/matheus/dev/hw_publishing/frontend/* username@your-vps-ip:/var/www/
 
 ### 3.3 Install Dependencies and Build
 ```bash
-cd /var/www/your-app-name
+cd /var/www/your-app-name/frontend
 npm install
 npm run build
 ```
@@ -110,7 +172,7 @@ server {
     listen 80;
     server_name your-domain.com www.your-domain.com;  # Replace with your domain or IP
     
-    root /var/www/your-app-name/dist;
+    root /var/www/your-app-name/frontend/dist;
     index index.html;
     
     # Handle Vue.js routing (SPA)
@@ -315,6 +377,7 @@ git pull origin main
 
 # Install dependencies and build
 echo "Installing dependencies..."
+cd frontend
 npm install
 npm run build
 
