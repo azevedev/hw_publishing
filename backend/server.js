@@ -13,9 +13,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Handle preflight requests
-app.options('*', cors());
-
 app.use(express.json());
 
 // Sample user data

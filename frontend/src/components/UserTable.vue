@@ -125,6 +125,7 @@
       async fetchUsers() {
         try {
           const response = await api.get('/users');
+          console.log("Response from API:", response);
           this.users = response.data;
           this.currentPage = 1;
         } catch (err) {
