@@ -71,6 +71,6 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-    console.log(`Backend server running at http://localhost:${port}`);
+app.listen(port, '127.0.0.1', () => {
+    console.log('Backend running on port 3001 (localhost only)');
 });
