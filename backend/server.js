@@ -7,7 +7,7 @@ const app = express();
 const port = 3001;
 
 app.use(cors({
-    origin: ['https://hw.azevedev.com', 'https://www.hw.azevedev.com'],
+    origin: ['https://hw.azevedev.com', 'https://www.hw.azevedev.com', 'https://hw-api.azevedev.com'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
