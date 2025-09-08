@@ -98,12 +98,21 @@ export default {
     getAvatarClasses(name) {
       const palette = [
         ['bg-primary', 'text-primary-content'],
+        ['bg-primary-content', 'text-primary'],
         ['bg-secondary', 'text-secondary-content'],
+        ['bg-secondary-content', 'text-secondary'],
         ['bg-accent', 'text-accent-content'],
+        ['bg-accent-content', 'text-accent'],
         ['bg-info', 'text-info-content'],
+        ['bg-info-content', 'text-info'],
         ['bg-success', 'text-success-content'],
+        ['bg-success-content', 'text-success'],
         ['bg-warning', 'text-warning-content'],
-        ['bg-error', 'text-error-content']
+        ['bg-warning-content', 'text-warning'],
+        ['bg-error', 'text-error-content'],
+        ['bg-error-content', 'text-error'],
+        ['bg-base-content', 'text-base-content-content'],
+
       ]
       const key = String(name || '').toLowerCase().trim()
       let hash = 0
@@ -113,7 +122,7 @@ export default {
       const idx = key.length ? hash % palette.length : 0
       return palette[idx]
     },
-    // Format only 10-digit numbers: (AAA) XXX-XXXX; otherwise return raw
+    // Format phone
     formatPhone(raw) {
       if (!raw) return ''
       const digits = String(raw).replace(/\D/g, '')
