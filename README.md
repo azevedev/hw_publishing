@@ -62,6 +62,7 @@ ENCRYPTED_DATA_URL=https://n8n-apps.nlabshealth.com/webhook/data-5dYbrVSlMVJxfmc
 DECRYPTION_KEY=your_decryption_key
 N8N_WEBHOOK_URL=https://your-n8n-instance.com/webhook/users
 PORT=3001
+NODE_ENV=development
 ```
 
 ## 🔌 API Endpoints
