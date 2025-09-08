@@ -48,7 +48,7 @@
               <div class="flex items-center space-x-3">
                 <div class="avatar placeholder">
                   <div class="bg-secondary text-primary-content rounded-full w-10 !flex items-center justify-center">
-                    <span class="text-sm font-semibold">{{  (user.nome?.split(' ')[0]?.charAt(0)?.toUpperCase() ?? '-')  + (user.nome.split(' ')[1]?.charAt(0)?.toUpperCase() ?? '') }}</span>
+                    <span class="text-sm font-semibold">{{  (user?.nome?.split(' ')[0]?.charAt(0)?.toUpperCase() ?? '-')  + (user?.nome?.split(' ')[1]?.charAt(0)?.toUpperCase() ?? '') }}</span>
                   </div>
                 </div>
                 <div class="font-medium text-base-content">{{ user.nome }}</div>
