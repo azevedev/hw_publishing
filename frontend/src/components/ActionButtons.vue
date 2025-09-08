@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+  <div class="flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
     <!-- Execute Button -->
     <button 
       @click="$emit('execute')" 
       :disabled="loading"
-      class="btn btn-success btn-lg shadow-lg hover:shadow-xl transition-all duration-300 text-white"
+      class="btn btn-success btn-lg sm:w-auto w-full shadow-lg hover:shadow-xl transition-all duration-300 text-white"
     >
       <div v-if="loading" class="loading loading-spinner loading-sm "></div>
       <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -17,7 +17,7 @@
     <button 
       @click="$emit('clear')" 
       :disabled="loading"
-      class="btn btn-error btn-lg shadow-lg hover:shadow-xl transition-all duration-300 text-white"
+      class="btn btn-error btn-lg sm:w-auto w-full shadow-lg hover:shadow-xl transition-all duration-300 text-white"
     >
       <div v-if="loading" class="loading loading-spinner loading-sm"></div>
       <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -5,7 +5,7 @@
       <!-- Header Section -->
       <header class="border-b border-base-300 backdrop-blur-sm">
         <div class="max-w-7xl mx-auto px-6 py-8">
-          <div class="flex flex-col md:flex-row items-center justify-between">
+          <div class="flex flex-col sm:flex-row items-center justify-between">
             <div class="flex items-center space-x-4">
               <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg">
                 <svg class="w-7 h-7 text-primary-content" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -19,7 +19,7 @@
             </div>
             
             <!-- Status Indicator & Theme Toggle -->
-            <div class="flex items-center space-x-3 mt-8 md:mt-0">
+            <div class="flex items-center space-x-3 mt-8 sm:mt-0">
               <!-- Status Indicator -->
               <div class="flex items-center space-x-2 px-4 py-2 bg-base-200 rounded-lg border border-base-300">
                 <div class="w-2 h-2 bg-success rounded-full animate-pulse"></div>

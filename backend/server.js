@@ -6,23 +6,24 @@ dotenv.config();
 const app = express();
 const port = 3001;
 
-app.use(cors({
+// CORS configuration, production and development
+const corsOptions = {
     origin: ['https://hw.azevedev.com', 'https://www.hw.azevedev.com', 'https://hw-api.azevedev.com'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
-}));
+};
 
+if (process.env.NODE_ENV === 'development') {
+    console.log('Development mode');
+    corsOptions.origin = ['http://localhost:3000', 'http://localhost:3001'];
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
-// Sample user data
-const users = [
-  { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Developer' },
-  { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'Designer' },
-  { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Manager' },
-  { id: 4, name: 'Alice Williams', email: 'alice@example.com', role: 'QA Engineer' },
-  { id: 5, name: 'Charlie Brown', email: 'charlie@example.com', role: 'DevOps' }
-];
+// User data
+const users = require('./users.json');
 
 const axios = require('axios');
 const { decryptData } = require('./decryption');
@@ -36,19 +37,21 @@ app.post('/api/execute', async (req, res) => {
     console.log("Response from encrypted data:", response.data?.data?.encrypted ?? {});
     const encryptedData = response.data?.data?.encrypted ?? {};
     
+    // Skip decryption for now
     // Decrypt the data
-    const decryptedData = decryptData(
-      encryptedData.encrypted,
-      'data-5dYbrVSlMVJxfmco',
-      encryptedData.iv,
-      encryptedData.authTag
-    );
+    // const decryptedData = decryptData(
+    //   encryptedData.encrypted,
+    //   encryptedData.encription_key,
+    //   encryptedData.iv,
+    //   encryptedData.authTag
+    // );
     
     // Send data to N8N webhook
     console.log("URL:", process.env.N8N_WEBHOOK_URL);
-    await axios.post(process.env.N8N_WEBHOOK_URL, decryptedData);
+    console.log("Users:", users);
+    await axios.post(process.env.N8N_WEBHOOK_URL, {users: users} );
     
-    res.json({ success: true, message: 'Data processed successfully' });
+    res.json({ success: true, message: 'Data processed successfully', users });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

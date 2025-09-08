@@ -31,7 +31,7 @@
       </div>
   
       <!-- Pagination -->
-      <div v-if="users.length > 0">
+      <div v-if="users.length > 0" class="mt-18">
         <Pagination
           :current-page="currentPage"
           :total-pages="totalPages"
@@ -95,9 +95,9 @@
         this.error = null;
         
         try {
-          await api.post('/execute');
+          const response = await api.post('/execute');
           // Refresh the user data
-          await this.fetchUsers();
+          this.users = response.data.users ?? [];
         } catch (err) {
           this.error = err.response?.data?.error || err.message;
           console.error('Error executing process:', err);
