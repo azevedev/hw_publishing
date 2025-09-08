@@ -26,6 +26,7 @@
       <div>
         <UserTableDisplay 
           :users="paginatedUsers" 
+          :users-length="users.length"
           :loading="loading" 
         />
       </div>
