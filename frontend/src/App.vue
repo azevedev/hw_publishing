@@ -102,7 +102,7 @@ export default {
     async checkOnline() {
       try {
         // In development, backend is at localhost:3001; in production, reuse api base
-        const url = import.meta.env.DEV ? 'http://localhost:3001/up' : 'https://hw-api.azevedev.com/up'
+        const url = import.meta.env.DEV ? 'http://localhost:3001/api/up' : 'https://hw-api.azevedev.com/api/up'
         const response = await fetch(url, { method: 'GET' })
         this.online = response.ok
       } catch (e) {

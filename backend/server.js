@@ -30,7 +30,7 @@ const axios = require('axios');
 const { supabase } = require('./db.js');
 
 // Simple health check endpoint
-app.get('/up', (req, res) => {
+app.get('/api/up', (req, res) => {
     res.sendStatus(200);
 });
 
